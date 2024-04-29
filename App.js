@@ -72,8 +72,19 @@ class Student {
         else {
             console.log("Couldn't find the semester");
         }
-    }   
+    }
 
+    // count whole credit
+    countCredit(){
+        let nCredit = 0;
+        for (const sem in this.calendar){
+            let courses = this.calendar[sem];
+            for (let i = 0; i < courses.length; i++) {
+                nCredit += courses[i].credit;
+            }
+        }
+        return nCredit;
+    }
 }
 
 // Initialize the student
@@ -123,7 +134,6 @@ student.addClass("F24", "Elementary Spanish", "SPAN110", 4);
 
 student.addClass("S25", "Robotics", "CMSC325", 4);
 student.addClass("S25", "Capstone", "CMSC481", 2);
-
 
 
 export default function App() {
