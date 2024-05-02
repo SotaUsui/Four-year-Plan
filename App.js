@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
-
-
+//import { StatusBar } from 'expo-status-bar';
+//import { StyleSheet, Text, View } from 'react-native';
+//import { PaperProvider } from 'react-native-paper';
+import React from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Picker } from 'react-native';
 
 class Student {
     constructor(first, last, year){
@@ -19,7 +19,7 @@ class Student {
             let fall = "F" + i.toString();
             let spring = "S" + (i+1).toString();
 
-            this.calendar[fall] = []
+            this.calendar[fall] = [];
             this.calendar[spring] = [];
         }
     }
@@ -72,7 +72,7 @@ class Student {
         else {
             console.log("Couldn't find the semester");
         }
-    }
+    }   
 
     // count whole credit
     countCredit(){
@@ -83,6 +83,7 @@ class Student {
                 nCredit += courses[i].credit;
             }
         }
+
         return nCredit;
     }
 }
@@ -135,36 +136,80 @@ student.addClass("F24", "Elementary Spanish", "SPAN110", 4);
 student.addClass("S25", "Robotics", "CMSC325", 4);
 student.addClass("S25", "Capstone", "CMSC481", 2);
 
+student.countCredit();
+
 
 export default function App() {
   return (
-    // Make calender by Table
-    <TableContainer component={Paper}>
-      <TableHead>
-        <TableRow>
-            <TableCell>Class Name</TableCell>
-            <TableCell align="right">Class Code</TableCell>
-            <TableCell align="right">Credit</TableCell>
-        </TableRow>
-      </TableHead>
+    <ScrollView style={styles.container}>
+      // Display the calender
+      {Object.keys(student.calendar).map(semester => {          // Map function split to each semester
+        const classes = student.calendar[semester];             // classes is the cur semester
+        return (
+          <View key={semester} style={styles.semesterContainer}> 
+            <Text style={styles.semesterTitle}>{semester}</Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <Text style={styles.columnHeader}>Class Name</Text>
+                <Text style={styles.columnHeader}>Class Code</Text>
+                <Text style={styles.columnHeader}>Credit</Text>
+              </View>
+              {classes.map((course, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <Text style={styles.cell}>{course.courseName}</Text>
+                  <Text style={styles.cell}>{course.courseCode}</Text>
+                  <Text style={styles.cell}>{course.credit}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        );
+      })}
 
-      <TableBody>
-        <TableCell>
-
-        </TableCell>
+      // Add form
+      //<form>
+        <label>
+            Semeseter:
+            <select name="selectSem">
+                {Object.keys(student.calendar).map((semester, index) => (
+                <option value={semester}>{semester}</option>
+                ))}
+            </select>
+        </label>
 
         
+    </ScrollView>
   );
 }
 
-
-/*
+// Define styles
 const styles = StyleSheet.create({
-  container: {
+  semesterContainer: {
+    marginBottom: 20,
+  },
+  semesterTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  table: {
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+  },
+  columnHeader: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 10,
+    fontWeight: 'bold',
+  },
+  cell: {
+    flex: 1,
+    padding: 10,
   },
 });
-*/
